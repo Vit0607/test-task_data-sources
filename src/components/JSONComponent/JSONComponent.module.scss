@@ -1,0 +1,14 @@
+.jsonContainer {
+  background: var(--white-color);
+  padding: 1rem;
+  border: 1px solid var(--border-color);
+  height: 10rem;
+  overflow-y: auto;
+  flex-grow: 1;
+  overflow-y: auto;
+
+  pre {
+    margin: 0;
+    white-space: pre-wrap;
+  }
+}
