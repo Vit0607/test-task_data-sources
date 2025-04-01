@@ -1,0 +1,16 @@
+.modalOverlay {
+  // Используем те же стили что и для SourceModal
+  @extend .modalOverlay;
+}
+
+.modal {
+  @extend .modal;
+
+  p {
+    margin: 20px 0;
+  }
+}
+
+.buttons {
+  @extend .buttons;
+}

@@ -9,6 +9,9 @@ interface BodyProps {
   loadedJSON: any;
   countRows: number;
   countColumns: number;
+  onAdd: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
 }
 
 const BodyComponent: React.FC<BodyProps> = ({
@@ -17,7 +20,10 @@ const BodyComponent: React.FC<BodyProps> = ({
   setCurrentURL_ID,
   loadedJSON,
   countRows,
-  countColumns
+  countColumns,
+  onAdd,
+  onEdit,
+  onDelete
 }) => {
   return (
     <div className={styles.body}>
@@ -25,6 +31,9 @@ const BodyComponent: React.FC<BodyProps> = ({
         urls={urls}
         currentURL_ID={currentURL_ID}
         setCurrentURL_ID={setCurrentURL_ID}
+        onAdd={onAdd}
+        onEdit={onEdit}
+        onDelete={onDelete}
       />
 
       <InfoComponent

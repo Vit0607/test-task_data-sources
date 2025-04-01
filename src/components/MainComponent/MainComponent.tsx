@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import MenuComponent from '../MenuComponent/MenuComponent';
 import BodyComponent from '../BodyComponent/BodyComponent';
 import styles from './MainComponent.module.scss';
+import SourceModal from '../SourceModal/SourceModal';
+import DeleteConfirmationModal from '../DeleteConfirmationModal/DeleteConfirmationModal';
 
 export interface URLItem {
   name: string;
   url: string;
 }
 
-const MainComponent: React.FC = () => {
+const MainComponent = () => {
   const [state, setState] = useState({
     urls: [] as URLItem[],
     loadedJSON: null as any,
@@ -16,6 +18,14 @@ const MainComponent: React.FC = () => {
     countColumns: 0,
     statusLoadedJSON: false,
     currentURL_ID: -1
+  });
+
+  const [modalState, setModalState] = useState({
+    isAddModalOpen: false,
+    isEditModalOpen: false,
+    isDeleteModalOpen: false,
+    editingIndex: -1,
+    tempSource: { name: '', url: '' }
   });
 
   // Загрузка из Local Storage
@@ -90,6 +100,78 @@ const MainComponent: React.FC = () => {
     }
   };
 
+  // Обработчики действий
+  const handleAddSource = () => {
+    setModalState(prev => ({
+      ...prev,
+      isAddModalOpen: true,
+      tempSource: { name: '', url: '' }
+    }));
+  };
+
+  const handleEditSource = () => {
+    if (state.currentURL_ID === -1) return;
+
+    setModalState(prev => ({
+      ...prev,
+      isEditModalOpen: true,
+      editingIndex: state.currentURL_ID,
+      tempSource: state.urls[state.currentURL_ID]
+    }));
+  };
+
+  const handleDeleteSource = () => {
+    if (state.currentURL_ID === -1) return;
+
+    setModalState(prev => ({
+      ...prev,
+      isDeleteModalOpen: true
+    }));
+  };
+
+  // Сохранение изменений
+  const handleSaveSource = (name: string, url: string) => {
+    const newSource = { name, url };
+
+    setState(prev => {
+      const newUrls = [...prev.urls];
+      if (modalState.editingIndex > -1) {
+        newUrls[modalState.editingIndex] = newSource;
+      } else {
+        newUrls.push(newSource);
+      }
+      return {
+        ...prev,
+        urls: newUrls,
+        currentURL_ID:
+          modalState.editingIndex > -1
+            ? modalState.editingIndex
+            : newUrls.length - 1
+      };
+    });
+
+    setModalState(prev => ({
+      ...prev,
+      isAddModalOpen: false,
+      isEditModalOpen: false,
+      editingIndex: -1
+    }));
+  };
+
+  // Удаление источника
+  const handleConfirmDelete = () => {
+    setState(prev => ({
+      ...prev,
+      urls: prev.urls.filter((_, i) => i !== prev.currentURL_ID),
+      currentURL_ID: -1
+    }));
+
+    setModalState(prev => ({
+      ...prev,
+      isDeleteModalOpen: false
+    }));
+  };
+
   return (
     <div className={styles.main}>
       <MenuComponent
@@ -108,6 +190,36 @@ const MainComponent: React.FC = () => {
         loadedJSON={state.loadedJSON}
         countRows={state.countRows}
         countColumns={state.countColumns}
+        onAdd={handleAddSource}
+        onEdit={handleEditSource}
+        onDelete={handleDeleteSource}
+      />
+
+      <SourceModal
+        isOpen={modalState.isAddModalOpen || modalState.isEditModalOpen}
+        mode={modalState.isAddModalOpen ? 'add' : 'edit'}
+        initialName={modalState.tempSource.name}
+        initialUrl={modalState.tempSource.url}
+        onSave={handleSaveSource}
+        onCancel={() =>
+          setModalState(prev => ({
+            ...prev,
+            isAddModalOpen: false,
+            isEditModalOpen: false
+          }))
+        }
+      />
+
+      <DeleteConfirmationModal
+        isOpen={modalState.isDeleteModalOpen}
+        sourceName={state.urls[state.currentURL_ID]?.name || ''}
+        onConfirm={handleConfirmDelete} // Привязка функции подтверждения
+        onCancel={() =>
+          setModalState(prev => ({
+            ...prev,
+            isDeleteModalOpen: false
+          }))
+        }
       />
     </div>
   );
