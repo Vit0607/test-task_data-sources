@@ -1,0 +1,25 @@
+.instruction {
+  color: var(--grey-color);
+  margin-top: 2rem;
+
+  h3 {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  .instructionList {
+    padding-left: 1.5rem;
+
+    li {
+      font-size: 1.2rem;
+    }
+  }
+
+  .link {
+    text-decoration: underline;
+    text-align: center;
+    display: inline-block;
+    color: var(--grey-color);
+    width: 100%;
+  }
+}

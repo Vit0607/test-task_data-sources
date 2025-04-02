@@ -1,4 +1,5 @@
 import ButtonsComponent from '../ButtonsComponent/ButtonsComponent';
+import InstructionComponent from '../InstructionComponent/InstructionComponent';
 import LoadedComponent from '../LoadedComponent/LoadedComponent';
 import styles from './MenuComponent.module.scss';
 
@@ -26,6 +27,7 @@ const MenuComponent: React.FC<MenuProps> = ({
         onSave={onSave}
         onCalculate={onCalculate}
       />
+      <InstructionComponent />
       {statusLoaded && <LoadedComponent />}
     </div>
   );
