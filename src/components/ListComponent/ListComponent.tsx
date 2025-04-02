@@ -22,7 +22,7 @@ const ListComponent: React.FC<ListProps> = ({
 }) => {
   return (
     <div className={styles.list}>
-      <h3>Список источников данных</h3>
+      <h2>Список источников данных</h2>
       <URLComponent
         url={currentURL_ID !== -1 ? urls[currentURL_ID]?.url : ''}
         hasSources={urls.length > 0}
